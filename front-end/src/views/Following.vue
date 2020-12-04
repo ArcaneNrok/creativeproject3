@@ -1,29 +1,32 @@
 <template>
-<div class="page">
-  <div v-for="user in users" :key=user.username>
-    <router-link class="section userview" :to="'/user/' + user.username">
-      <img class="profile_pic" :src="'/images/icons/'+ user.username +'.svg'">
-      <p class="username">{{user.username}}</p>
-    </router-link>
+  <div class="page">
+    <div v-for="user in users" :key="user.username">
+      <router-link class="section userview" :to="'/user/' + user.username">
+        <img
+          class="profile_pic"
+          :src="'/images/icons/' + user.username + '.svg'"
+        />
+        <p class="username">{{ user.username }}</p>
+      </router-link>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
+  name: "Home",
   components: {},
   data() {
     return {
-      searchText: '',
-    }
+      searchText: ""
+    };
   },
   computed: {
     users() {
       return this.$root.$data.users;
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>

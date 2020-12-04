@@ -1,24 +1,25 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from '../views/Home.vue'
-import Following from '../views/Following.vue'
-import User from '../views/User.vue'
+import Home from "../views/Home.vue";
+import Following from "../views/Following.vue";
+import User from "../views/User.vue";
 
 Vue.use(VueRouter);
 
-const routes = [{
+const routes = [
+  {
     path: "/",
     name: "Home",
     component: Home
   },
   {
-    path: '/following',
-    name: 'Following',
+    path: "/following",
+    name: "Following",
     component: Following
   },
   {
-    path: '/user/:id',
-    name: 'User',
+    path: "/user/:id",
+    name: "User",
     component: User
   }
 ];

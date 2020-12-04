@@ -1,52 +1,62 @@
 <template>
-<div class="reverse">
-  <div class="post" v-for="post in posts" :key="post.postId">
-
-    <router-link class="username" :to="'/user/' + post.poster">
-      <img class="profile_pic" :src="'/images/icons/'+ post.poster +'.svg'">
-      <h1 class="username">{{post.poster}}</h1>
-    </router-link>
-
-    <p>{{post.text}}</p>
-
-    <div class="post response" v-for="reply in post.replies" :key="reply.postId">
-
-      <router-link class="username" :to="'/user/' + reply.poster">
-        <img class="profile_pic" :src="'/images/icons/'+ reply.poster +'.svg'">
-        <h1 class="username">{{reply.poster}}</h1>
+  <div class="reverse">
+    <div class="post" v-for="post in posts" :key="post._id">
+      <router-link class="username" :to="'/user/' + post.poster">
+        <img
+          class="profile_pic"
+          :src="'/images/icons/' + post.poster + '.svg'"
+        />
+        <h1 class="username">{{ post.poster }}</h1>
       </router-link>
-      <p>{{reply.text}}</p>
 
+      <p>{{ post.text }}</p>
+
+      <div class="post response" v-for="reply in post.replies" :key="reply._id">
+        <router-link class="username" :to="'/user/' + reply.poster">
+          <img
+            class="profile_pic"
+            :src="'/images/icons/' + reply.poster + '.svg'"
+          />
+          <h1 class="username">{{ reply.poster }}</h1>
+        </router-link>
+        <p>{{ reply.text }}</p>
+      </div>
+
+      <div class="respondForm">
+        <h2 class="replyLabel">Reply</h2>
+        <form @submit.prevent="addReply(post._id)">
+          <textarea v-bind:id="'replyText' + post._id"></textarea>
+          <br />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
-
-    <div class="respondForm">
-      <h2 class="replyLabel">Reply</h2>
-      <form @submit.prevent="addReply(post.postId)">
-        <textarea v-bind:id="'replyText'+post.postId"></textarea>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-
   </div>
-</div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: 'Feed',
+  name: "Feed",
   props: {
     posts: Array
   },
   methods: {
-    addReply(postId) {
-      console.log("replyText" + postId)
-      this.$root.$data.addReply(postId, document.getElementById("replyText" + postId).value);
+    async addReply(postId) {
+      let reply = {
+        poster: this.$root.$data.currentUser.username,
+        text: document.getElementById("replyText" + postId).value
+      };
+      let post = this.posts.find(function(i) {
+        return i._id == postId;
+      });
+      post.replies.push(reply);
+      await axios.put("/api/posts/" + postId, post);
       document.getElementById("replyText" + postId).value = "";
-    },
+    }
   },
   computed: {}
-}
+};
 </script>
 
 <style scoped>
@@ -72,7 +82,6 @@ export default {
   margin-bottom: 5px;
   border-width: thin;
 }
-
 
 .username img {
   width: 20px;
